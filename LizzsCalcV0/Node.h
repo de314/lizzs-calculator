@@ -1,3 +1,5 @@
+/*
+
 #ifndef NODE_h
 #define NODE_h
 
@@ -11,3 +13,5 @@ typedef struct Node {
 } Node;
 
 #endif
+
+*/
