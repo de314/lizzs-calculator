@@ -7,7 +7,7 @@
 int buttons[BUTTONS_LENGTH];
 int last_button;
 
-void setup () {
+void setup () {6
   Serial.begin(9600);
   
   buttons[0] = 3;
