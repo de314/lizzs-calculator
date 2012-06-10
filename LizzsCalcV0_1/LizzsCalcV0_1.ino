@@ -59,16 +59,14 @@ void printList(Node* probe) {
 }
 
 Node* generateList(char* eq) {
-  Node* head = (Node*)malloc(sizeof(Node));
-  head->c = eq[0];
+  Node* head = getNode(eq[0]);
   head->prev = 0;
   head->next = 0;
   Node* probe = head;
   for (int i=1;eq[i];i++) {
-    probe->next = (Node*)malloc(sizeof(Node));
+    probe->next = getNode(eq[i]);
     probe->next->prev = probe;
     probe->next->next = 0;
-    probe->next->c = eq[i];
     probe = probe->next;
   }
   return head;
@@ -76,6 +74,15 @@ Node* generateList(char* eq) {
 
 int getButtonState() {
   return 0;
+}
+
+Node* getNode(char c) {
+  Node* node = (Node*)malloc(sizeof(Node));
+  node->next = (Node*)0;
+  node->prev = (Node*)0;
+  node->c = c;
+  node->match = -1;
+  return node;
 }
 
 /*
@@ -107,9 +114,8 @@ Node* pre_parse(Node* eq, char c1, char c2) {
       insertBefore(ip, '(');
       if (ip == eq && ip->prev)
         eq = ip->prev;
-      Node* temp = new Node();
+      Node* temp = getNode(')');
       temp->prev = probe;
-      temp->c = ')';
       probe->next = temp;
     }
     return eq;
@@ -120,7 +126,7 @@ Node* pre_parse(Node* eq, char c1, char c2) {
 }
 
 char validateParentheses(Node* probe) {
-  Node arr[10];
+  Node* arr[10];
   int count = 0;
   int curr = 0;
   while (probe) {
@@ -132,11 +138,14 @@ char validateParentheses(Node* probe) {
     }
     probe = probe->next;
   }
-  return count == 0;
+  return curr == 0;
 }
 
 void surround(Node* ip, Node* probe) {
-  if ((ip->prev && ip->prev->c != '(' && ip->c != '(') || (probe->c != ')' && probe->prev->c != ')')) {
+  Node* left = ip->prev && ip->prev->c == ')' ? ip->prev : ip;
+  Node* right = probe->c == ')' ? probe : probe->prev;
+  //if ((ip->prev && ip->prev->c != '(' && ip->c != '(') || (probe->c != ')' && probe->prev->c != ')')) {
+  if (left->match < 0 || right->match < 0 || left->match != right->match) {
     // insert left side
     insertBefore(ip, '(');
     // insert right side
@@ -145,27 +154,26 @@ void surround(Node* ip, Node* probe) {
 }
 
 void insertBefore(Node* curr, char c) {
-  Node* temp = (Node*)malloc(sizeof(Node));
+  Node* temp = getNode(c);
   if (curr->prev)
     curr->prev->next = temp;
   temp->next = curr;
   temp->prev = curr->prev;
   curr->prev = temp;
-  temp->c = c;
 }
 
 /*
  *
  */
 Node* pre_parse1(Node* eq) {
-  return pre_parse(eq, '+', '-');
+  return validateParentheses(eq) ? pre_parse(eq, '+', '-') : 0;
 }
 
 /*
  *
  */
 Node* pre_parse2(Node* eq) {
-  return pre_parse(eq, '*', '/');
+  return validateParentheses(eq) ? pre_parse(eq, '*', '/') : 0;
 }
 
 
