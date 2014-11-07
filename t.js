@@ -106,7 +106,10 @@ var myApp = {
                     var extraQp = myApp.sessionKeyQP.replace(/<<session_key>>/g, sessionKey);
                     var privateNotesUrl = 'https://community.ubnt.com/restapi/vc/users/id/'+user.id+'/mailbox/notes/inbox';
                     privateNotesUrl += myApp.urlQueryParams + extraQp;
-                    body += '<b><a href="'+privateNotesUrl+'" target="blank">View Uers\'s Private Messages</a></b>';
+                    body += '<b><a href="'+privateNotesUrl+'" target="blank">View Uers\'s Private Message Inbox</a></b>';
+                    privateNotesUrl = 'https://community.ubnt.com/restapi/vc/users/id/'+user.id+'/mailbox/notes/outbox';
+                    privateNotesUrl += myApp.urlQueryParams + extraQp;
+                    body += '<b><a href="'+privateNotesUrl+'" target="blank">View Uers\'s Private Message Outbox</a></b>';
                     myApp.sendEmail(data.response.user, {
                         to: 'david.esposito@ubnt.com',
                         subject: 'Info for ' + user.login,
