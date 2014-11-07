@@ -29,7 +29,7 @@ var myApp = {
     },
     urlQueryParams: '?restapi.response_format=json&restapi.response_style=-types,-null',
     sessionKeyQP: '&restapi.session_key=<<session_key>>',
-    userUrl: 'https://community.ubnt.com/restapi/vc/users/self',
+    userUrl: '//community.ubnt.com/restapi/vc/users/self',
     logSuccess: function (data) {
         console.log(data);
     },
@@ -37,7 +37,7 @@ var myApp = {
         console.log(status + " " + err);
         console.error(data);
     },
-    setEmailUrl: 'https://community.ubnt.com/restapi/vc/users/id/<<id>>/email/set',
+    setEmailUrl: '//community.ubnt.com/restapi/vc/users/id/<<id>>/email/set',
     setEmailQp: '&value=<<value>>',
     setEmailSuccess: function (data) {
         myApp.logSuccess(data);
@@ -47,7 +47,7 @@ var myApp = {
             console.error('call failed.');
         }
     },
-    loginUrl: 'https://community.ubnt.com/restapi/vc/authentication/sessions/login',
+    loginUrl: '//community.ubnt.com/restapi/vc/authentication/sessions/login',
     ssoTokenQp: '&sso.authentication_token=<<sso_token>>',
     getSessionKey: function(callback) {
         var ssoToken = myApp.getCookie('!lithiumSSO');
